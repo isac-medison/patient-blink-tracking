@@ -1,6 +1,4 @@
-opencv-python~=4.11.0.86
 fastapi~=0.115.12
-mediapipe~=0.10.21
-imutils~=0.5.4
-uvicorn~=0.34.2
-cvzone~=1.6.1
+opencv-python~=4.11.0.86
+pydantic~=2.11.7
+starlette~=0.46.2
