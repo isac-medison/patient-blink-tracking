@@ -1,29 +1,31 @@
-from datetime import datetime, UTC
 from typing import Annotated
 
-from fastapi import APIRouter, Path, Depends
+from fastapi import APIRouter, Depends, Path
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT
 
-from database import get_db
-from domain.entities import User
+from infrastructure.database import get_db
+from domain.entities.User import User
+from use_cases.exceptions import EntityNotFoundError
+from starlette import status
 
 # from models import User, UserDTO
 
 router = APIRouter()
 
-
-@router.get("/users")
-async def get_users(db: Annotated[Session, Depends(get_db)]):
-    return db.query(User.User).all()
+db_dependency = Annotated[Session, Depends(get_db)]
 
 
-# @router.get("/users/{id}")
-# async def get_users(user_id: int):
-#     for user in USERS:
-#         if user.id == user_id:
-#             return user
-#     return None
+@router.get("/users", status_code=status.HTTP_200_OK)
+async def get_users(db: db_dependency):
+    return db.query(User).all()
+
+
+@router.get("/users/{id}", status_code=status.HTTP_200_OK)
+async def get_users(db: db_dependency, user_id: int = Path(gt=0)):
+    model = db.query(User).filter(user_id == User.id).first()
+    if model is not None:
+        return model
+    raise EntityNotFoundError(user_id)
 #
 #
 # @router.post("/users", status_code=HTTP_201_CREATED)
