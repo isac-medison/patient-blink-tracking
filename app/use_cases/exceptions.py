@@ -7,6 +7,9 @@ class EntityNotFoundError(Exception):
     def __str__(self) -> str:
         return f"Entity not found: id == {self.entity_id}"
 
+
+
+
 class ExternalError(Exception):
     pass
 
