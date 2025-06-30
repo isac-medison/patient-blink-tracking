@@ -51,3 +51,37 @@ async def get_rooms():
 @router.get("/spectate/{room_id}")
 async def spectate(room_id: int):
     return f"room {room_id}"
+
+
+def generate():
+    # grab global references to the output frame and lock variables
+    global outputFrame, lock
+    # loop over frames from the output stream
+    while True:
+        # wait until the lock is acquired
+        with lock:
+            # check if the output frame is available, otherwise skip
+            # the iteration of the loop
+            if outputFrame is None:
+                continue
+            # encode the frame in JPEG format
+            (flag, encodedImage) = cv2.imencode(".jpg", outputFrame)
+            # ensure the frame was successfully encoded
+            if not flag:
+                continue
+        # yield the output frame in the byte format
+        yield b''+bytearray(encodedImage)
+
+
+
+@router.post("/process-frame")
+async def process_frame(file: UploadFile = File(...)):
+    contents = await file.read()
+    np_arr = np.frombuffer(contents, np.uint8)
+    img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+
+    # ✅ Apply your OpenCV logic here
+    processed = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    _, processed = cv2.imencode(".jpg", processed)
+
+    return Response(content=processed.tobytes(), media_type="image/jpeg")

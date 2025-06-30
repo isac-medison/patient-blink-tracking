@@ -3,7 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:root@localhost:3306/blink"
+SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:rootroot@localhost:3306/blink"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 

@@ -1,34 +1,18 @@
-<video id="video" autoplay></video>
-<canvas id="canvas" hidden></canvas>
-<img id="processed" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blink</title>
+    <style> </style>
+</head>
 
-<script>
-const video = document.getElementById("video");
-const canvas = document.getElementById("canvas");
-const img = document.getElementById("processed");
-
-// Ask for camera access
-navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-    video.srcObject = stream;
-
-    setInterval(() => {
-        // Draw video frame to canvas
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        canvas.getContext("2d").drawImage(video, 0, 0);
-
-        // Send to server as blob
-        canvas.toBlob(blob => {
-            fetch("/process-frame", {
-                method: "POST",
-                body: blob,
-                headers: {
-                    "Content-Type": "image/jpeg"
-                }
-            }).then(res => res.blob()).then(processedBlob => {
-                img.src = URL.createObjectURL(processedBlob);
-            });
-        }, "image/jpeg");
-    }, 1000); // send a frame every 1s
-});
-</script>
+<body>
+    <h1>Hey,
+    </br>
+    <strong>
+            We are Blink
+    </strong>
+    </h1>
+</body>
+</html>
